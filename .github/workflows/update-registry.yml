@@ -1,4 +1,4 @@
-name: Update Registry
+name: Deploy static content to Pages
 
 on:
   push:
@@ -9,10 +9,19 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: false
 
 jobs:
-  build-and-deploy:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -31,14 +40,20 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          chmod +x getThem.sh
-          ./getThem.sh
+          npm run update
+
+          # Prepare distribution folder
+          mkdir dist
+          cp installable-plugins.json installable-themes.json registry-complete.json registry-files.json registry-index.json index.html README.md dist/
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload built site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist'
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
-          publish_branch: gh-pages
-          keep_files: true
-          exclude_assets: '.github,node_modules,package.json,package-lock.json,getThem.sh,.prettierrc'
+        id: deployment
+        uses: actions/deploy-pages@v4

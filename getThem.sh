@@ -42,4 +42,4 @@ jq '[.[] | select(.manifest != null and (.files | index("main.js") != null))]' r
 jq '[.[] | select(.manifest != null and (.files | index("theme.css") != null))]' registry-complete.json > installable-themes.json
 
 # Format the JSON file for better readability
-npm run format
+# npm run format

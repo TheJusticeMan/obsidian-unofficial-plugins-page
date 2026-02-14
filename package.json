@@ -1,0 +1,22 @@
+{
+  "name": "obsidian-unofficial-plugins",
+  "version": "1.0.0",
+  "description": "A list of the plugins in json format",
+  "repository": {
+    "type": "git",
+    "url": "obsidian-unofficial-plugins"
+  },
+  "license": "MIT",
+  "author": "Justice Vellacott",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write .",
+    "update": "bash ./getThem.sh"
+  },
+  "dependencies": {
+    "prettier": "^3.8.1",
+    "prettier-plugin-sh": "^0.18.0"
+  }
+}
